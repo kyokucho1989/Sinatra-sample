@@ -1,0 +1,2 @@
+# Sinatra-sample
+Sinatraをつかってメモアプリをつくるサンプル
