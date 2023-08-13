@@ -1,40 +1,48 @@
 require 'sinatra'
+require 'pry'
+require_relative './models/memo'
 
-get '/' do
-  erb :index
+class MyApp < Sinatra::Base
+  get '/' do
+    @memos = Memo.all
+    erb :index,layout: :layout
+  end
+
+  get '/memos' do
+    @memos = Memo.all
+    erb :index , layout: :layout
+  end
+
+  get '/memos/new' do
+    erb :new , layout: :layout
+  end
+
+  post '/memos' do
+    memo_param = params.slice(:title, :content)
+    memo = Memo.new(**memo_param)
+    memo.save
+    erb :create
+  end
+
+  get '/memos/:id' do
+    @memo = Memo.find(params[:id])
+    erb :show , layout: :layout
+  end
+
+  get '/memos/:id/edit' do
+    erb :edit
+    'メモ編集'
+  end
+
+  patch '/memos/:id' do
+    erb :update
+
+  end
+
+  delete '/memos/:id' do
+    erb :delete
+
+  end
 end
 
-get '/memos' do
-  erb :index
-end
-
-get '/memos/new' do
-  erb :new
-  'メモ新規作成ページ'
-end
-
-post '/memos' do
-  erb :create
-  'メモを作成しました'
-end
-
-get '/memos/:id' do
-  erb :show
-  'メモ詳細'
-end
-
-get '/memos/:id/edit' do
-  erb :edit
-  'メモ編集'
-end
-
-patch '/memos/:id' do
-  erb :update
-
-end
-
-delete '/memos/:id' do
-  erb :delete
-
-end
-
+MyApp.run!

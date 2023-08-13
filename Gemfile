@@ -5,4 +5,5 @@ gem 'pstore'
 
 group :development do
   gem 'rubocop-fjord', require: false
+  gem 'pry-byebug'
 end
