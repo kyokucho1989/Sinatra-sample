@@ -1,6 +1,6 @@
 <h1>詳細ページ</h1>
-<h2><%= @memo.title %></h2>
-<p> <%= @memo.content %></p>
+<h2><%= escape_html(@memo.title) %></h2>
+<p> <%= escape_html(@memo.content) %></p>
 
 <p><a href ="/memos/<%= @memo.id %>/edit">編集</a></p>
 <form action="/memos/<%= @memo.id %>" accept-charset="UTF-8" method="post">

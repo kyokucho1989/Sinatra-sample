@@ -4,6 +4,6 @@
 <h2>一覧</h2>
 <ul>
 <% @memos.each do |item| %>
- <li><a href ="/memos/<%= item.id %>"><%= item.title %></a></li>
+ <li><a href ="/memos/<%=  item.id %>"><%= escape_html(item.title) %></a></li>
 <% end %>
 </ul>

@@ -1,9 +1,20 @@
 require 'sinatra'
 require 'pry'
 require_relative './models/memo'
+require 'sinatra/base'
+
+require 'erb'
 
 class MyApp < Sinatra::Base
   enable :method_override
+  helpers do
+    include ERB::Util
+
+    def escape_html(content)
+      html_escape(content)
+    end
+  end
+  # helpers Sinatra::HTMLEscapeHelper
   get '/' do
     @memos = Memo.all
     erb :index,layout: :layout
