@@ -1,3 +1,9 @@
 <h1>メモ詳細</h1>
 <h2><%= @memo.title %></h2>
 <p> <%= @memo.content %></p>
+
+<p><a href ="/memos/<%= @memo.id %>/edit">編集</a></p>
+<form action="/memos/<%= @memo.id %>" accept-charset="UTF-8" method="post">
+  <input type="hidden" name="_method" value="DELETE">
+  <input type="submit" name="commit" value="削除">
+</form>

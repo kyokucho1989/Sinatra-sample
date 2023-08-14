@@ -3,6 +3,7 @@ require 'pry'
 require_relative './models/memo'
 
 class MyApp < Sinatra::Base
+  enable :method_override
   get '/' do
     @memos = Memo.all
     erb :index,layout: :layout
@@ -30,18 +31,21 @@ class MyApp < Sinatra::Base
   end
 
   get '/memos/:id/edit' do
+    @memo = Memo.find(params[:id])
     erb :edit
-    'メモ編集'
   end
 
   patch '/memos/:id' do
+    @memo = Memo.find(params[:id])
+    @memo.update(**{title: params[:title], content: params[:content]})
     erb :update
 
   end
 
   delete '/memos/:id' do
+    @memo = Memo.find(params[:id])
+    @memo.delete
     erb :delete
-
   end
 end
 
