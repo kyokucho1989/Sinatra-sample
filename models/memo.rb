@@ -10,13 +10,12 @@ class Memo
   end
  
   def self.all
-    data_all = nil
+    data = nil
     DB.transaction do
       data = DB.instance_variable_get(:@table)
-      data.delete("lastid")
-      data_all = data.values
     end
-    data_all
+    data.delete("lastid")
+    data.values
   end
 
   def self.find(id)
@@ -27,17 +26,17 @@ class Memo
 
   def save
     DB.transaction do
-      if DB["lastid"].nil? 
+      if DB.instance_variable_get(:@table).size < 1
         DB["lastid"] = 1
       else
         DB["lastid"] = DB["lastid"] + 1
       end
     end
-
     DB.transaction do
       new_id = DB["lastid"]
       DB["#{new_id}"] = self
       DB["#{new_id}"].id = new_id
+      DB["lastid"] = new_id
     end
   end
 
@@ -57,10 +56,10 @@ class Memo
 
 end
 
-memo = Memo.new(title: "タイトル", content: "内容")
-memo.save
+# memo = Memo.new(title: "タイトル", content: "内容")
+# memo.save
 
-memo.update(**{title: "aaa", content: "bbb"})
+# memo.update(**{title: "aaa", content: "bbb"})
 
 # memo.delete(memo)
 # memo.all
