@@ -51,7 +51,8 @@ class MyApp < Sinatra::Base
 
   patch '/memos/:id' do
     @memo = Memo.find(params[:id])
-    @memo.update(**{ title: params[:title], content: params[:content] })
+    # @memo.update(**{ title: params[:title], content: params[:content] })
+    @memo.update(**params)
     erb :update
   end
 
