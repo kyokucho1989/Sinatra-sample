@@ -23,7 +23,7 @@ class Memo
   end
 
   def to_h
-    { id: self.id, title: @title, content: @content }
+    { id: id, title: @title, content: @content }
   end
 
   def self.all
@@ -42,34 +42,30 @@ class Memo
   end
 
   def save
-    if File.size?('.db_file')
-      loaded_data = JSON.parse(File.read('.db_file'), symbolize_names: true)
-    else
-      loaded_data = {last_id: 0, value: []}
-    end
+    loaded_data = if File.size?('.db_file')
+                    JSON.parse(File.read('.db_file'), symbolize_names: true)
+                  else
+                    { last_id: 0, value: [] }
+                  end
     self.id = loaded_data[:last_id] + 1
     loaded_data[:last_id] = id
-    loaded_data[:value] << self.to_h
-    File.open('.db_file', 'w') do |file|
-      file.write(JSON.dump(loaded_data))
-    end
+    loaded_data[:value] << to_h
+    File.open('.db_file', 'w') { |file| file.write(JSON.dump(loaded_data)) }
   end
 
   def self.update(**params)
     loaded_data = JSON.parse(File.read('.db_file'), symbolize_names: true)
-    index = loaded_data[:value].index { |hash| hash[:id] == params['id'].to_i }
-    loaded_data[:value][index]['title'] = params['title']
-    loaded_data[:value][index]['content'] = params['content']
-    File.open('.db_file', 'w') do |file|
-      file.write(JSON.dump(loaded_data))
+    index = loaded_data[:value].index do |hash|
+      hash[:id] == params['id'].to_i
     end
+    data = loaded_data[:value][index]
+    data.merge!('title' => params['title'], 'content' => params['content'])
+    File.open('.db_file', 'w') { |file| file.write(JSON.dump(loaded_data)) }
   end
 
   def self.delete(id)
     loaded_data = JSON.parse(File.read('.db_file'), symbolize_names: true)
     loaded_data[:value].delete_if { |hash| hash[:id] == id.to_i }
-    File.open('.db_file', 'w') do |file|
-      file.write(JSON.dump(loaded_data))
-    end
+    File.open('.db_file', 'w') { |file| file.write(JSON.dump(loaded_data)) }
   end
 end
