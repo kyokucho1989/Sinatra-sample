@@ -3,6 +3,6 @@
 
 <ul>
 <% @memos.each do |item| %>
- <li><a href="/memos/<%= item.id %>"><%= escape_html(item.title) %></a></li>
+ <li><a href="/memos/<%= item[:id] %>"><%= escape_html(item[:title]) %></a></li>
 <% end %>
 </ul>

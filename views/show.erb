@@ -1,12 +1,12 @@
 <h2>詳細ページ</h2>
 <h3>タイトル</h3>
-<p><%= escape_html(@memo.title) %></p>
+<p><%= escape_html(@memo[:title]) %></p>
 
 <h3>内容</h3>
-<p> <%= escape_html(@memo.content) %></p>
+<p> <%= escape_html(@memo[:content]) %></p>
 
-<p><a href="/memos/<%= @memo.id %>/edit">編集</a></p>
-<form action="/memos/<%= @memo.id %>" accept-charset="UTF-8" method="post">
+<p><a href="/memos/<%= @memo[:id] %>/edit">編集</a></p>
+<form action="/memos/<%= @memo[:id] %>" accept-charset="UTF-8" method="post">
   <input type="hidden" name="_method" value="DELETE">
   <input type="submit" name="commit" value="削除">
 </form>

@@ -51,14 +51,13 @@ class MyApp < Sinatra::Base
 
   patch '/memos/:id' do
     @memo = Memo.find(params[:id])
-    # @memo.update(**{ title: params[:title], content: params[:content] })
-    @memo.update(**params)
+    @memo = Memo.update(**params)
     erb :update
   end
 
   delete '/memos/:id' do
     @memo = Memo.find(params[:id])
-    @memo.delete
+    Memo.delete(params[:id])
     erb :delete
   end
 end
