@@ -2,46 +2,41 @@
 
 require 'sinatra'
 require 'pry'
-require_relative './models/memo'
-require 'sinatra/base'
-
-require 'erb'
+require_relative 'models/memo'
 
 # アプリ本体のクラス
 class MyApp < Sinatra::Base
   enable :method_override
   helpers do
-    include ERB::Util
-
     def escape_html(content)
-      html_escape(content)
+      ERB::Util.html_escape(content)
     end
   end
 
   get '/' do
     @memos = Memo.all
-    erb :index, layout: :layout
+    erb :index
   end
 
   get '/memos' do
     @memos = Memo.all
-    erb :index, layout: :layout
+    erb :index
   end
 
   get '/memos/new' do
-    erb :new, layout: :layout
+    erb :new
   end
 
   post '/memos' do
-    memo_param = params.slice(:title, :content)
-    memo = Memo.new(**memo_param)
+    memo_params = params.slice(:title, :content)
+    memo = Memo.new(**memo_params)
     memo.save
     erb :create
   end
 
   get '/memos/:id' do
     @memo = Memo.find(params[:id])
-    erb :show, layout: :layout
+    erb :show
   end
 
   get '/memos/:id/edit' do

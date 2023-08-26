@@ -4,7 +4,7 @@ This is Memo app using Sinatra
 ## Installation
 
 ```
-$git clone -b feature/build-with-Sinatra https://github.com/kyokucho1989/Sinatra-sample.git
+$ git clone -b feature/build-with-Sinatra https://github.com/kyokucho1989/Sinatra-sample.git
 ```
 
 ```

@@ -1,33 +1,38 @@
-body{
+body {
   margin: 0 auto;
   background-color: #fafafa;
 }
 
-h1{
+h1 {
   font-size: 2rem;
-  /*background-color: #aaf; */
 } 
 
-.header{
-  margin:0;
-  padding:20px;
+.header {
+  margin: 0;
+  padding: 20px;
   text-align: center;
   background-color: #bfcbc2;
 }
 
-.container{
-  width:50%;
-  margin:30px auto;
-  padding:20px;
+.container {
+  width: 50%;
+  margin: 30px auto;
+  padding: 20px;
   border: solid 1px #bfcbc2;
-  /*background-color: #c0c;*/
 }
 
-.footer{
-  margin:10px 20px;
-  padding:30px;
+.footer {
+  margin: 10px 20px;
+  padding: 30px;
   text-align: center;
   color: #2d324d;
   border-top: solid 1px #bfcbc2;
-  /*background-color: #7d84b2;*/
+}
+
+.form-control {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #2d324d;
+  border: 1px solid #bfcbc2;
+  border-radius: 0.25rem;
 }

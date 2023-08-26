@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-gem 'pstore'
-gem 'sinatra', '~> 3.1'
-gem 'webrick', '~> 1.3', '>= 1.3.1'
+source 'https://rubygems.org'
 
-group :development do
-  gem 'erb_lint', require: false
-  gem 'pry-byebug'
-  gem 'rubocop-fjord', require: false
-end
+gem 'sinatra'
+gem 'webrick'
+
+gem 'erb_lint'
+gem 'pry-byebug'
+gem 'rubocop-fjord', require: false
+gem 'rubocop-rails', require: false
