@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'sinatra'
+require 'sinatra/base'
 require 'pry'
 require_relative 'models/memo'
 
@@ -13,12 +13,7 @@ class MyApp < Sinatra::Base
     end
   end
 
-  get '/' do
-    @memos = Memo.all
-    erb :index
-  end
-
-  get '/memos' do
+  get(%r{/|/memos}) do
     @memos = Memo.all
     erb :index
   end
@@ -31,6 +26,10 @@ class MyApp < Sinatra::Base
     memo_params = params.slice(:title, :content)
     memo = Memo.new(**memo_params)
     memo.save
+    redirect '/create'
+  end
+
+  get '/create' do
     erb :create
   end
 
@@ -47,12 +46,20 @@ class MyApp < Sinatra::Base
   patch '/memos/:id' do
     @memo = Memo.find(params[:id])
     @memo = Memo.update(**params)
+    redirect '/update'
+  end
+
+  get '/update' do
     erb :update
   end
 
   delete '/memos/:id' do
     @memo = Memo.find(params[:id])
     Memo.delete(params[:id])
+    redirect '/delete'
+  end
+
+  get '/delete' do
     erb :delete
   end
 end
