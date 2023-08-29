@@ -1,4 +1,5 @@
 # Sinatra-sample
+
 This is Memo app using Sinatra
 
 ## Installation
@@ -8,10 +9,9 @@ $ git clone -b feature/build-with-Sinatra https://github.com/kyokucho1989/Sinatr
 ```
 
 ```
-$ cd ./Sinatra-sample 
+$ cd ./Sinatra-sample
 $ bundle
 ```
-
 
 And run with:
 
