@@ -6,8 +6,8 @@
 <p> <%= escape_html(@memo[:content]) %></p>
 
 <p><a href="/memos/<%= @memo[:id] %>/edit">編集</a></p>
-<form action="/memos/<%= @memo[:id] %>" accept-charset="UTF-8" method="post">
+<form action="/memos/<%= @memo[:id] %>" method="post">
   <input type="hidden" name="_method" value="DELETE">
-  <input type="submit" name="commit" value="削除">
+  <input type="submit" value="削除">
 </form>
 <a href="/">topへ戻る</a>
