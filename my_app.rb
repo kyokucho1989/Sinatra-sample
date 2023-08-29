@@ -13,7 +13,11 @@ class MyApp < Sinatra::Base
     end
   end
 
-  get(%r{/|/memos}) do
+  get '/' do
+    redirect '/memos'
+  end
+
+  get '/memos' do
     @memos = Memo.all
     erb :index
   end
@@ -26,10 +30,10 @@ class MyApp < Sinatra::Base
     memo_params = params.slice(:title, :content)
     memo = Memo.new(**memo_params)
     memo.save
-    redirect '/create'
+    redirect "/memos/#{memo.id}/create"
   end
 
-  get '/create' do
+  get '/memos/:id/create' do
     erb :create
   end
 
@@ -46,20 +50,20 @@ class MyApp < Sinatra::Base
   patch '/memos/:id' do
     @memo = Memo.find(params[:id])
     @memo = Memo.update(**params)
-    redirect '/update'
+    redirect "/memos/#{params[:id]}/update"
   end
 
-  get '/update' do
+  get '/memos/:id/update' do
     erb :update
   end
 
   delete '/memos/:id' do
     @memo = Memo.find(params[:id])
     Memo.delete(params[:id])
-    redirect '/delete'
+    redirect "/memos/#{params[:id]}/delete"
   end
 
-  get '/delete' do
+  get '/memos/:id/delete' do
     erb :delete
   end
 end
