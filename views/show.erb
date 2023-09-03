@@ -1,0 +1,13 @@
+<h2>詳細ページ</h2>
+<h3>タイトル</h3>
+<p><%= escape_html(@memo[:title]) %></p>
+
+<h3>内容</h3>
+<p> <%= escape_html(@memo[:content]) %></p>
+
+<p><a href="/memos/<%= @memo[:id] %>/edit">編集</a></p>
+<form action="/memos/<%= @memo[:id] %>" method="post">
+  <input type="hidden" name="_method" value="DELETE">
+  <input type="submit" value="削除">
+</form>
+<a href="/">topへ戻る</a>
