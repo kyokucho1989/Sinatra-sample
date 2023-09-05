@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+require 'pg'
+
+
+
+
 class Memo
   MEMO_SAVE_FILE = '.memo_data'
   private_constant :MEMO_SAVE_FILE
@@ -20,17 +25,16 @@ class Memo
 
   class << self
     def all
-      unless File.exist?(MEMO_SAVE_FILE)
-        memo_data = { last_id: 0, memo_list: [] }
-        File.open(MEMO_SAVE_FILE, 'w') { |file| file.write(JSON.dump(memo_data)) }
-      end
-      memo_data = JSON.parse(File.read(MEMO_SAVE_FILE), symbolize_names: true)
-      memo_data[:memo_list]
+      conn = PG.connect( dbname: 'sinatra-db' )
+      memo_data = conn.exec( "SELECT * FROM memotable" )
     end
 
     def find(id)
-      memo_data = JSON.parse(File.read(MEMO_SAVE_FILE), symbolize_names: true)
-      memo_data[:memo_list].find { |memo| memo[:id] == id.to_i }
+      conn = PG.connect( dbname: 'sinatra-db' )
+      memo_data = conn.exec( "SELECT * FROM memotable WHERE id = #{id}" )
+      # binding.irb
+      # memo_data = JSON.parse(File.read(MEMO_SAVE_FILE), symbolize_names: true)
+      # memo_data[:memo_list].find { |memo| memo[:id] == id.to_i }
     end
 
     def update(**params)
