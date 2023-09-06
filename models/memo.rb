@@ -14,11 +14,10 @@ class Memo
   end
 
   def save
-    memo_data = JSON.parse(File.read(MEMO_SAVE_FILE), symbolize_names: true)
-    @id = memo_data[:last_id] + 1
-    memo_data[:last_id] = id
-    memo_data[:memo_list] << to_h
-    File.open(MEMO_SAVE_FILE, 'w') { |file| file.write(JSON.dump(memo_data)) }
+    conn = PG.connect( dbname: 'sinatra-db' )
+    conn.exec_params( "INSERT INTO memotable VALUES (nextval('id'), '#{@title}', '#{@content}')" )
+    memo_data = conn.exec('SELECT lastval()')
+    @id = memo_data.first['lastval'].to_i
   end
 
   class << self
