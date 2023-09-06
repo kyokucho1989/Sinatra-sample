@@ -38,9 +38,8 @@ class Memo
     end
 
     def delete(id)
-      memo_data = JSON.parse(File.read(MEMO_SAVE_FILE), symbolize_names: true)
-      memo_data[:memo_list].delete_if { |memo| memo[:id] == id.to_i }
-      File.open(MEMO_SAVE_FILE, 'w') { |file| file.write(JSON.dump(memo_data)) }
+      conn = PG.connect( dbname: 'sinatra-db' )
+      conn.exec( "DELETE FROM memotable WHERE id = #{id}" )
     end
   end
 
