@@ -32,6 +32,7 @@ class Memo
     def find(id)
       conn = PG.connect( dbname: 'sinatra-db' )
       memo_data = conn.exec( "SELECT * FROM memotable WHERE id = #{id}" )
+      memo_data.first
       # binding.irb
       # memo_data = JSON.parse(File.read(MEMO_SAVE_FILE), symbolize_names: true)
       # memo_data[:memo_list].find { |memo| memo[:id] == id.to_i }
