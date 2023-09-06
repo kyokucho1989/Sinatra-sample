@@ -3,8 +3,6 @@
 require 'pg'
 
 
-
-
 class Memo
   MEMO_SAVE_FILE = '.memo_data'
   private_constant :MEMO_SAVE_FILE
@@ -33,20 +31,11 @@ class Memo
       conn = PG.connect( dbname: 'sinatra-db' )
       memo_data = conn.exec( "SELECT * FROM memotable WHERE id = #{id}" )
       memo_data.first
-      # binding.irb
-      # memo_data = JSON.parse(File.read(MEMO_SAVE_FILE), symbolize_names: true)
-      # memo_data[:memo_list].find { |memo| memo[:id] == id.to_i }
     end
 
     def update(**params)
-      memo_data = JSON.parse(File.read(MEMO_SAVE_FILE), symbolize_names: true)
-      index = memo_data[:memo_list].index do |memo|
-        memo[:id] == params['id'].to_i
-      end
-      data_to_update = memo_data[:memo_list][index]
-      data_to_update[:title] = params['title']
-      data_to_update[:content] = params['content']
-      File.open(MEMO_SAVE_FILE, 'w') { |file| file.write(JSON.dump(memo_data)) }
+      conn = PG.connect( dbname: 'sinatra-db' )
+      conn.exec( "UPDATE memotable SET title = '#{params['title']}', content = '#{params['content']}' WHERE id = #{params['id']}" )
     end
 
     def delete(id)
