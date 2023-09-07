@@ -15,7 +15,7 @@ class Memo
 
   def save
     conn = PG.connect( dbname: 'sinatra-db' )
-    conn.exec_params( "INSERT INTO memotable VALUES (nextval('id'), '#{@title}', '#{@content}')" )
+    conn.exec_params( "INSERT INTO memotable VALUES (nextval('id'), $1, $2)",[@title, @content] )
     memo_data = conn.exec('SELECT lastval()')
     @id = memo_data.first['lastval'].to_i
   end
@@ -23,18 +23,18 @@ class Memo
   class << self
     def all
       conn = PG.connect( dbname: 'sinatra-db' )
-      memo_data = conn.exec( "SELECT * FROM memotable" )
+      memo_data = conn.exec( "SELECT * FROM memotable ORDER BY id" )
     end
 
     def find(id)
       conn = PG.connect( dbname: 'sinatra-db' )
-      memo_data = conn.exec( "SELECT * FROM memotable WHERE id = #{id}" )
+      memo_data = conn.exec_params( "SELECT * FROM memotable WHERE id = $1", [id] )
       memo_data.first
     end
 
     def update(**params)
       conn = PG.connect( dbname: 'sinatra-db' )
-      conn.exec( "UPDATE memotable SET title = '#{params['title']}', content = '#{params['content']}' WHERE id = #{params['id']}" )
+      conn.exec_params( "UPDATE memotable SET title = $1, content = $2 WHERE id = $3" ,[params['title'], params['content'], params['id']])
     end
 
     def delete(id)
