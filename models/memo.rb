@@ -46,7 +46,7 @@ class Memo
 
     def delete(id)
       conn = PG.connect(dbname: DB_NAME)
-      conn.exec("DELETE FROM memotable WHERE id = #{id}")
+      conn.exec('DELETE FROM memotable WHERE id = $1', [id])
     end
   end
 
