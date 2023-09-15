@@ -7,13 +7,14 @@ class Memo
   private_constant :DB_NAME
   @@conn = PG.connect(dbname: DB_NAME)
   attr_reader :id, :title, :content
+
   def initialize(**params)
     @title = params[:title]
     @content = params[:content]
   end
 
   def save
-    save_memo = {title: @title, content: @content}
+    save_memo = { title: @title, content: @content }
     @@conn.exec_params("INSERT INTO memotable VALUES (nextval('id'), $1, $2)", [save_memo[:title], save_memo[:content]])
     memo_data = @@conn.exec('SELECT lastval()')
     @id = memo_data.first['lastval'].to_i
@@ -23,10 +24,10 @@ class Memo
     def all
       all_memo_data = @@conn.exec('SELECT * FROM memotable ORDER BY id')
       all_memo_data.map do |memo_data|
-        memo_data.transform_keys!(&:to_sym) 
+        memo_data.transform_keys!(&:to_sym)
         memo_data[:id] = memo_data[:id].to_i
         memo_data
-      end 
+      end
     end
 
     def find(id)

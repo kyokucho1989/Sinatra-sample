@@ -4,7 +4,6 @@ require 'sinatra/base'
 require 'pry'
 require_relative 'models/memo'
 
-$conn1 = PG.connect(dbname: 'sinatra-db')
 # アプリ本体のクラス
 class MyApp < Sinatra::Base
   configure do
