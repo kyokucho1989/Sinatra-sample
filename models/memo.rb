@@ -14,7 +14,8 @@ class Memo
 
   def save
     conn = PG.connect(dbname: DB_NAME)
-    conn.exec_params("INSERT INTO memotable VALUES (nextval('id'), $1, $2)", [@title, @content])
+    save_memo = {title: @title, content: @content}
+    conn.exec_params("INSERT INTO memotable VALUES (nextval('id'), $1, $2)", [save_memo[:title], save_memo[:content]])
     memo_data = conn.exec('SELECT lastval()')
     @id = memo_data.first['lastval'].to_i
   end
@@ -22,13 +23,20 @@ class Memo
   class << self
     def all
       conn = PG.connect(dbname: DB_NAME)
-      conn.exec('SELECT * FROM memotable ORDER BY id')
+      all_memo_data = conn.exec('SELECT * FROM memotable ORDER BY id')
+      all_memo_data.map do |memo_data|
+        memo_data.transform_keys!(&:to_sym) 
+        memo_data[:id] = memo_data[:id].to_i
+        memo_data
+      end 
     end
 
     def find(id)
       conn = PG.connect(dbname: DB_NAME)
       memo_data = conn.exec_params('SELECT * FROM memotable WHERE id = $1', [id])
-      memo_data.first
+      memo_data = memo_data.first.transform_keys!(&:to_sym)
+      memo_data[:id] = memo_data[:id].to_i
+      memo_data
     end
 
     def update(**params)
