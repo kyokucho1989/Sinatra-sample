@@ -23,17 +23,13 @@ class Memo
     def all
       all_memo_data = CONN.exec('SELECT * FROM memotable ORDER BY id')
       all_memo_data.map do |memo_data|
-        memo_data.transform_keys!(&:to_sym)
-        memo_data[:id] = memo_data[:id].to_i
-        memo_data
+        memo_data = convert_keys_to_symbol(memo_data)
       end
     end
 
     def find(id)
       memo_data = CONN.exec_params('SELECT * FROM memotable WHERE id = $1', [id])
-      memo_data = memo_data.first.transform_keys!(&:to_sym)
-      memo_data[:id] = memo_data[:id].to_i
-      memo_data
+      memo_data = convert_keys_to_symbol(memo_data.first)
     end
 
     def update(**params)
@@ -42,6 +38,12 @@ class Memo
 
     def delete(id)
       CONN.exec('DELETE FROM memotable WHERE id = $1', [id])
+    end
+
+    def convert_keys_to_symbol(memo_data)
+      memo_data = memo_data.transform_keys!(&:to_sym)
+      memo_data[:id] = memo_data[:id].to_i
+      memo_data
     end
   end
 
