@@ -6,11 +6,6 @@ require_relative 'models/memo'
 
 # アプリ本体のクラス
 class MyApp < Sinatra::Base
-  configure do
-    # データベース接続を初回のみ確立
-    set :db, PG.connect(dbname: 'sinatra-db')
-  end
-
   enable :method_override
   helpers do
     def escape_html(content)
