@@ -13,6 +13,14 @@ $ cd ./Sinatra-sample
 $ bundle
 ```
 
+
+```
+$ createdb sinatra-db
+$ psql sinatra-db
+# CREATE SEQUENCE id;
+# CREATE TABLE memotable(id integer, title varchar, content varchar);
+```
+
 And run with:
 
 ```

@@ -3,6 +3,7 @@
 source 'https://rubygems.org'
 
 gem 'erb_lint'
+gem 'pg'
 gem 'pry-byebug'
 gem 'rubocop'
 gem 'rubocop-fjord'

@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
+require 'pg'
+DB_NAME = 'sinatra-db'
+CONN = PG.connect(dbname: DB_NAME)
+
 class Memo
-  MEMO_SAVE_FILE = '.memo_data'
-  private_constant :MEMO_SAVE_FILE
   attr_reader :id, :title, :content
 
   def initialize(**params)
@@ -11,43 +13,37 @@ class Memo
   end
 
   def save
-    memo_data = JSON.parse(File.read(MEMO_SAVE_FILE), symbolize_names: true)
-    @id = memo_data[:last_id] + 1
-    memo_data[:last_id] = id
-    memo_data[:memo_list] << to_h
-    File.open(MEMO_SAVE_FILE, 'w') { |file| file.write(JSON.dump(memo_data)) }
+    save_memo = { title: @title, content: @content }
+    CONN.exec_params("INSERT INTO memotable VALUES (nextval('id'), $1, $2)", [save_memo[:title], save_memo[:content]])
+    memo_data = CONN.exec('SELECT lastval()')
+    @id = memo_data.first['lastval'].to_i
   end
 
   class << self
     def all
-      unless File.exist?(MEMO_SAVE_FILE)
-        memo_data = { last_id: 0, memo_list: [] }
-        File.open(MEMO_SAVE_FILE, 'w') { |file| file.write(JSON.dump(memo_data)) }
+      all_memo_data = CONN.exec('SELECT * FROM memotable ORDER BY id')
+      all_memo_data.map do |memo_data|
+        convert_keys_to_symbol(memo_data)
       end
-      memo_data = JSON.parse(File.read(MEMO_SAVE_FILE), symbolize_names: true)
-      memo_data[:memo_list]
     end
 
     def find(id)
-      memo_data = JSON.parse(File.read(MEMO_SAVE_FILE), symbolize_names: true)
-      memo_data[:memo_list].find { |memo| memo[:id] == id.to_i }
+      memo_data = CONN.exec_params('SELECT * FROM memotable WHERE id = $1', [id])
+      convert_keys_to_symbol(memo_data.first)
     end
 
     def update(**params)
-      memo_data = JSON.parse(File.read(MEMO_SAVE_FILE), symbolize_names: true)
-      index = memo_data[:memo_list].index do |memo|
-        memo[:id] == params['id'].to_i
-      end
-      data_to_update = memo_data[:memo_list][index]
-      data_to_update[:title] = params['title']
-      data_to_update[:content] = params['content']
-      File.open(MEMO_SAVE_FILE, 'w') { |file| file.write(JSON.dump(memo_data)) }
+      CONN.exec_params('UPDATE memotable SET title = $1, content = $2 WHERE id = $3', [params['title'], params['content'], params['id']])
     end
 
     def delete(id)
-      memo_data = JSON.parse(File.read(MEMO_SAVE_FILE), symbolize_names: true)
-      memo_data[:memo_list].delete_if { |memo| memo[:id] == id.to_i }
-      File.open(MEMO_SAVE_FILE, 'w') { |file| file.write(JSON.dump(memo_data)) }
+      CONN.exec('DELETE FROM memotable WHERE id = $1', [id])
+    end
+
+    def convert_keys_to_symbol(memo_data)
+      memo_data.transform_keys!(&:to_sym)
+      memo_data[:id] = memo_data[:id].to_i
+      memo_data
     end
   end
 
